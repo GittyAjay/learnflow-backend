@@ -21,6 +21,32 @@ NODE_ENV=development
 npm run dev
 ```
 
+## API Documentation
+
+This project includes comprehensive API documentation using Swagger/OpenAPI 3.0.
+
+### Accessing the Documentation
+
+Once the server is running, you can access the interactive API documentation at:
+
+- **Swagger UI**: `http://localhost:9000/api-docs`
+- **Health Check**: `http://localhost:9000/`
+
+The Swagger documentation provides:
+- Interactive API testing interface
+- Detailed request/response schemas
+- Example requests and responses
+- Error code documentation
+- API endpoint grouping by functionality
+
+### API Endpoints Overview
+
+The documentation is organized into the following categories:
+
+1. **Learning Path** - AI-powered learning path generation
+2. **Video Search** - Web scraping for educational videos
+3. **OpenAI** - Direct OpenAI API integrations
+
 ## API Endpoints
 
 ### Base URL: `http://localhost:3000/api`
@@ -138,18 +164,135 @@ Get a list of available OpenAI models.
 }
 ```
 
+### Learning Path Endpoints
+
+#### 1. Generate Learning Path
+**POST** `/learning-path`
+
+Generate a step-by-step learning path for a given topic using OpenAI.
+
+**Request Body:**
+```json
+{
+  "topic": "JavaScript basics"
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "title": "Introduction to JavaScript",
+      "description": "Learn the basics of JavaScript programming",
+      "emoji": "📚",
+      "timeToComplete": "2 hours"
+    }
+  ]
+}
+```
+
+#### 2. Get Best Video
+**POST** `/best-video`
+
+Find the best educational video for a given topic using Google search scraping.
+
+**Request Body:**
+```json
+{
+  "topic": "JavaScript basics tutorial"
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "title": "JavaScript Tutorial for Beginners",
+    "url": "https://www.youtube.com/watch?v=example",
+    "description": "Learn JavaScript from scratch with this comprehensive tutorial",
+    "duration": "15:30",
+    "channel": "Programming Tutorials",
+    "views": "1.2M views"
+  }
+}
+```
+
+#### 3. Get Video Options
+**POST** `/video-options`
+
+Get multiple video options for a given topic using Google search scraping.
+
+**Request Body:**
+```json
+{
+  "topic": "JavaScript basics tutorial",
+  "limit": 5
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "title": "JavaScript Tutorial for Beginners",
+      "url": "https://www.youtube.com/watch?v=example1",
+      "description": "Learn JavaScript from scratch",
+      "duration": "15:30",
+      "channel": "Programming Tutorials",
+      "views": "1.2M views"
+    },
+    {
+      "title": "JavaScript Crash Course",
+      "url": "https://www.youtube.com/watch?v=example2",
+      "description": "Quick JavaScript overview",
+      "duration": "8:45",
+      "channel": "Code Academy",
+      "views": "500K views"
+    }
+  ]
+}
+```
+
+## Google Scraping Service
+
+The application includes a Google scraping service that uses Puppeteer to search for educational videos on Google. This service:
+
+- Searches Google Video results for educational content
+- Extracts video metadata (title, URL, description, duration, channel, views)
+- Provides both single "best video" and multiple video options
+- Handles Google's redirect URLs to extract actual YouTube links
+- Uses proper user agents and browser settings to avoid detection
+
+### Testing the Scraper
+
+To test the Google scraping functionality:
+
+```bash
+npm run test:scraper
+```
+
+This will run a test that searches for "JavaScript basics tutorial" and displays the results.
+
 ## Project Structure
 
 ```
 src/
-├── index.ts              # Main server file
+├── index.ts                    # Main server file
 ├── routes/
-│   ├── index.ts          # Route aggregator
-│   └── openai.ts         # OpenAI API routes
+│   ├── index.ts               # Route aggregator
+│   ├── openai.ts              # OpenAI API routes
+│   └── learningPathRoutes.ts  # Learning path and video routes
+├── services/
+│   └── googleScraperService.ts # Google video scraping service
 ├── middleware/
-│   └── errorHandler.ts   # Error handling middleware
+│   └── errorHandler.ts        # Error handling middleware
 └── types/
-    └── openai.ts         # TypeScript type definitions
+    └── openai.ts              # TypeScript type definitions
 ```
 
 ## Error Handling

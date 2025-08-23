@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import CreateForm from './createForm';
 import learningPathRoutes from './learningPathRoutes';
 import openaiRoutes from './openai';
 
@@ -8,6 +9,9 @@ const router = Router();
 router.use('/openai', openaiRoutes);
 
 // Mount Learning Path routes
-router.use('/learning-routes', learningPathRoutes);
+router.use('/', learningPathRoutes);
 
-export default router; 
+router.use("/createFormData",CreateForm)
+
+
+export default router;
